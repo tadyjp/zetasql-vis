@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+cd "$(dirname $0)/.."
+readonly IMAGE='zetasql-vis:local'
+
+docker build . -t "${IMAGE}" -f Dockerfile.local
+
+mkdir -p .cache
+
+docker run \
+  --rm -it \
+  --entrypoint /bin/bash \
+  -v "$(pwd):/work" \
+  -v "$(pwd)/.cache:/root/.cache" \
+  -v "/work/.cache" \
+  -p 8080:8080 \
+  "${IMAGE}"
